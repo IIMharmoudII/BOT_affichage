@@ -43,7 +43,6 @@ async def on_ready():
     print(f"Bot connecté en tant que {bot.user}")
     update_channels.start()  # Lancer la mise à jour automatique des salons
 
-
 @tasks.loop(minutes=1)  # Mettre à jour toutes les 1 minute
 async def update_channels():
     for guild in bot.guilds:
@@ -78,4 +77,3 @@ async def on_guild_join(guild):
 # === Lancer le bot ===
 keep_alive()
 bot.run(TOKEN)
-
