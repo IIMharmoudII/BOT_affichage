@@ -20,8 +20,8 @@ intents.voice_states = True  # Nécessaire pour vérifier qui est en vocal
 bot = discord.Client(intents=intents)
 
 # Variables pour les noms des salons
-ONLINE_CHANNEL_NAME = "membres-en-ligne"
-VOICE_CHANNEL_NAME = "membres-en-vocal"
+ONLINE_CHANNEL_NAME = "𝐄𝐧 𝐋𝐢𝐠𝐧𝐞"
+VOICE_CHANNEL_NAME = "𝐌𝐞𝐦𝐛𝐫𝐞 𝐕𝐨𝐜"
 
 # === Serveur Web ===
 app = Flask('')
@@ -41,7 +41,7 @@ def keep_alive():
 @bot.event
 async def on_ready():
     print(f"Bot connecté en tant que {bot.user}")
-    update_channels.start()  # Lancer la mise à jour automatique des salons
+    await update_channels()  # Mettre à jour les salons à chaque démarrage
 
 @tasks.loop(minutes=1)  # Mettre à jour toutes les 1 minute
 async def update_channels():
@@ -64,8 +64,8 @@ async def update_channels():
         voice_members = [member for vc in guild.voice_channels for member in vc.members]
 
         # Mettre à jour les noms des salons
-        await online_channel.edit(name=f"{ONLINE_CHANNEL_NAME}-{len(online_members)}")
-        await voice_channel.edit(name=f"{VOICE_CHANNEL_NAME}-{len(voice_members)}")
+        await online_channel.edit(name=f"🟢・{ONLINE_CHANNEL_NAME} : {len(online_members)}")
+        await voice_channel.edit(name=f"🔈・{VOICE_CHANNEL_NAME} : {len(voice_members)}")
 
 @bot.event
 async def on_guild_join(guild):
