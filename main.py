@@ -18,9 +18,9 @@ intents.voice_states = True
 # Initialisation du bot
 bot = discord.Client(intents=intents)
 
-# Noms des salons vocaux
-ONLINE_CHANNEL_NAME = "👥・𝐄𝐧 𝐋𝐢𝐠𝐧𝐞 :"
-VOICE_CHANNEL_NAME = "🔈・𝐄𝐧 𝐕𝐨𝐜 :"
+# Noms de base des salons vocaux
+BASE_ONLINE_CHANNEL_NAME = "\ud83d\udee5\ufe0f\u30fb\ud835\udd08\ud835\udd2c \ud835\udd11\ud835\udd22\ud835\udd29\ud835\udd29\ud835\udd2c\ud835\udd1e :"
+BASE_VOICE_CHANNEL_NAME = "\ud83d\udd08\u30fb\ud835\udd08\ud835\udd2c \ud835\udd1c\ud835\udd1e\ud835\udd34 :"
 
 # === Serveur Web ===
 app = Flask('')
@@ -43,18 +43,24 @@ async def on_ready():
     print(f"Bot connecté en tant que {bot.user}")
     update_channels.start()  # Lancer la mise à jour automatique des salons
 
-@tasks.loop(minutes=1)  # Mettre à jour toutes les minutes
+@tasks.loop(seconds=30)  # Mettre à jour toutes les 30 secondes
 async def update_channels():
     for guild in bot.guilds:
-        # Chercher les salons existants
-        online_channel = discord.utils.get(guild.voice_channels, name=ONLINE_CHANNEL_NAME)
-        voice_channel = discord.utils.get(guild.voice_channels, name=VOICE_CHANNEL_NAME)
+        # Chercher les salons existants en ignorant la valeur actuelle
+        online_channel = discord.utils.find(
+            lambda c: c.name.startswith(BASE_ONLINE_CHANNEL_NAME) and isinstance(c, discord.VoiceChannel),
+            guild.voice_channels
+        )
+        voice_channel = discord.utils.find(
+            lambda c: c.name.startswith(BASE_VOICE_CHANNEL_NAME) and isinstance(c, discord.VoiceChannel),
+            guild.voice_channels
+        )
 
         # Vérifier que les salons existent, sinon afficher un avertissement
         if not online_channel:
-            print(f"[Avertissement] Le salon '{ONLINE_CHANNEL_NAME}' n'existe pas dans le serveur '{guild.name}'.")
+            print(f"[Avertissement] Le salon '{BASE_ONLINE_CHANNEL_NAME}' n'existe pas dans le serveur '{guild.name}'.")
         if not voice_channel:
-            print(f"[Avertissement] Le salon '{VOICE_CHANNEL_NAME}' n'existe pas dans le serveur '{guild.name}'.")
+            print(f"[Avertissement] Le salon '{BASE_VOICE_CHANNEL_NAME}' n'existe pas dans le serveur '{guild.name}'.")
 
         # Récupérer les membres en ligne et en vocal
         online_members = [member for member in guild.members if member.status != discord.Status.offline]
@@ -62,9 +68,9 @@ async def update_channels():
 
         # Mettre à jour les noms des salons existants
         if online_channel:
-            await online_channel.edit(name=f"👥・𝐄𝐧 𝐋𝐢𝐠𝐧𝐞 : {len(online_members)}")
+            await online_channel.edit(name=f"{BASE_ONLINE_CHANNEL_NAME} {len(online_members)}")
         if voice_channel:
-            await voice_channel.edit(name=f"🔈・𝐄𝐧 𝐕𝐨𝐜 : {len(voice_members)}")
+            await voice_channel.edit(name=f"{BASE_VOICE_CHANNEL_NAME} {len(voice_members)}")
 
 # === Lancer le bot ===
 keep_alive()
