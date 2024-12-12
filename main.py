@@ -50,17 +50,17 @@ async def update_channels():
         online_channel = discord.utils.get(guild.voice_channels, name=ONLINE_CHANNEL_NAME)
         voice_channel = discord.utils.get(guild.voice_channels, name=VOICE_CHANNEL_NAME)
 
-        # Créer les salons s'ils n'existent pas
+        # Vérifier que les salons existent, sinon afficher un avertissement
         if not online_channel:
-            online_channel = await guild.create_voice_channel(ONLINE_CHANNEL_NAME)
+            print(f"[Avertissement] Le salon '{ONLINE_CHANNEL_NAME}' n'existe pas dans le serveur '{guild.name}'.")
         if not voice_channel:
-            voice_channel = await guild.create_voice_channel(VOICE_CHANNEL_NAME)
+            print(f"[Avertissement] Le salon '{VOICE_CHANNEL_NAME}' n'existe pas dans le serveur '{guild.name}'.")
 
         # Récupérer les membres en ligne et en vocal
         online_members = [member for member in guild.members if member.status != discord.Status.offline]
         voice_members = [member for vc in guild.voice_channels for member in vc.members]
 
-        # Mettre à jour les noms des salons
+        # Mettre à jour les noms des salons existants
         if online_channel:
             await online_channel.edit(name=f"👥・𝐄𝐧 𝐋𝐢𝐠𝐧𝐞 : {len(online_members)}")
         if voice_channel:
