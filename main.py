@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import discord
 from discord.ext import tasks
 from flask import Flask
@@ -58,9 +60,9 @@ async def update_channels():
 
         # Vérifier que les salons existent, sinon afficher un avertissement
         if not online_channel:
-            print(f"[Avertissement] Le salon '{BASE_ONLINE_CHANNEL_NAME}' n'existe pas dans le serveur '{guild.name}'.")
+            print(f"[Avertissement] Le salon {repr(BASE_ONLINE_CHANNEL_NAME)} n'existe pas dans le serveur {repr(guild.name)}.")
         if not voice_channel:
-            print(f"[Avertissement] Le salon '{BASE_VOICE_CHANNEL_NAME}' n'existe pas dans le serveur '{guild.name}'.")
+            print(f"[Avertissement] Le salon {repr(BASE_VOICE_CHANNEL_NAME)} n'existe pas dans le serveur {repr(guild.name)}.")
 
         # Récupérer les membres en ligne et en vocal
         online_members = [member for member in guild.members if member.status != discord.Status.offline]
