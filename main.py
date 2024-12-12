@@ -21,8 +21,8 @@ intents.voice_states = True
 bot = discord.Client(intents=intents)
 
 # Noms de base des salons vocaux
-BASE_ONLINE_CHANNEL_NAME = "\ud83d\udee5\ufe0f\u30fb\ud835\udd08\ud835\udd2c \ud835\udd11\ud835\udd22\ud835\udd29\ud835\udd29\ud835\udd2c\ud835\udd1e :"
-BASE_VOICE_CHANNEL_NAME = "\ud83d\udd08\u30fb\ud835\udd08\ud835\udd2c \ud835\udd1c\ud835\udd1e\ud835\udd34 :"
+BASE_ONLINE_CHANNEL_NAME = "👥・𝐄𝐧 𝐋𝐢𝐠𝐧𝐞 :"
+BASE_VOICE_CHANNEL_NAME = "🔈・𝐄𝐧 𝐕𝐨𝐜 :"
 
 # === Serveur Web ===
 app = Flask('')
@@ -51,11 +51,11 @@ async def update_channels():
     for guild in bot.guilds:
         # Chercher les salons existants en ignorant la valeur actuelle
         online_channel = discord.utils.find(
-            lambda c: BASE_ONLINE_CHANNEL_NAME.strip(':') in c.name and isinstance(c, discord.VoiceChannel),
+            lambda c: c.name.startswith(BASE_ONLINE_CHANNEL_NAME) and isinstance(c, discord.VoiceChannel),
             guild.voice_channels
         )
         voice_channel = discord.utils.find(
-            lambda c: BASE_VOICE_CHANNEL_NAME.strip(':') in c.name and isinstance(c, discord.VoiceChannel),
+            lambda c: c.name.startswith(BASE_VOICE_CHANNEL_NAME) and isinstance(c, discord.VoiceChannel),
             guild.voice_channels
         )
 
