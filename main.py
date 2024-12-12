@@ -19,8 +19,8 @@ intents.voice_states = True
 bot = discord.Client(intents=intents)
 
 # Noms des salons vocaux
-ONLINE_CHANNEL_NAME = "👥・𝐔𝐭 𝐛𝐨𝐞𝐬 :"
-VOICE_CHANNEL_NAME = "🔈・𝐔𝐭 𝐛𝐬𝐨 :"
+ONLINE_CHANNEL_NAME = "👥・𝐄𝐧 𝐋𝐢𝐠𝐧𝐞 :"
+VOICE_CHANNEL_NAME = "🔈・𝐄𝐧 𝐕𝐨𝐜 :"
 
 # === Serveur Web ===
 app = Flask('')
@@ -50,6 +50,11 @@ async def update_channels():
         online_channel = discord.utils.get(guild.voice_channels, name=ONLINE_CHANNEL_NAME)
         voice_channel = discord.utils.get(guild.voice_channels, name=VOICE_CHANNEL_NAME)
 
+        # Supprimer les doublons s'ils existent
+        for channel in guild.voice_channels:
+            if channel.name not in [ONLINE_CHANNEL_NAME, VOICE_CHANNEL_NAME]:
+                await channel.delete()
+
         # Créer les salons s'ils n'existent pas
         if not online_channel:
             online_channel = await guild.create_voice_channel(ONLINE_CHANNEL_NAME)
@@ -61,8 +66,8 @@ async def update_channels():
         voice_members = [member for vc in guild.voice_channels for member in vc.members]
 
         # Mettre à jour les noms des salons
-        await online_channel.edit(name=f"👥・𝐔𝐭 𝐛𝐨𝐞𝐬 : {len(online_members)}")
-        await voice_channel.edit(name=f"🔈・𝐔𝐭 𝐛𝐬𝐨 : {len(voice_members)}")
+        await online_channel.edit(name=f"👥・𝐄𝐧 𝐋𝐢𝐠𝐧𝐞 : {len(online_members)}")
+        await voice_channel.edit(name=f"🔈・𝐄𝐧 𝐕𝐨𝐜 : {len(voice_members)}")
 
 # === Lancer le bot ===
 keep_alive()
